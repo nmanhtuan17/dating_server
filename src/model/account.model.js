@@ -3,6 +3,7 @@ import mongoose, { Schema } from "mongoose";
 const AccountSchema = new Schema({
   email: String,
   password: String,
+  isAdmin: Boolean,
   profile: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'

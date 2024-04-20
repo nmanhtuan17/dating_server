@@ -1,10 +1,11 @@
 import mongoose, { Schema } from "mongoose";
 
 const UserSchema = new Schema({
-  fullname: String,
+  fullName: String,
   age: Number,
   email: String,
-  address: String 
+  address: String,
+  gender: String
 })
 
 const User = mongoose.model('User', UserSchema)
