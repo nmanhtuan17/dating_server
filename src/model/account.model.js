@@ -7,7 +7,9 @@ const AccountSchema = new Schema({
   profile: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
-  }
+  },
+  isVerified: Boolean,
+  verifyCode: String
 })
 
 const Account = mongoose.model('Account', AccountSchema)
