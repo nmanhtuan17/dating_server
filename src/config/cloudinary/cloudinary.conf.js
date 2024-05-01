@@ -10,12 +10,16 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET
 });
 
-const storage = new CloudinaryStorage({
-  cloudinary,
-  allowedFormats: ['jpg', 'png'],
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  }
+// const storage = new CloudinaryStorage({
+//   cloudinary,
+//   allowedFormats: ['jpg', 'png'],
+//   filename: function (req, file, cb) {
+//     cb(null, file.originalname);
+//   }
+// });
+export const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+      fileSize: 2 * 1024 * 1024,
+  },
 });
-
-export const uploadCloud = multer({storage});

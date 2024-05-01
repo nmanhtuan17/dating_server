@@ -1,5 +1,5 @@
 import User from "../../model/user.model";
-
+import uploadToCloudinary from '../../utilities/uploadImage'
 export class UserCrl {
   static async updateProfile (req, res) {
     try {
@@ -17,13 +17,14 @@ export class UserCrl {
       return res.status(500).json(e);
     }
   }
-  static async uploadImage (req, res) {
+  static async uploadAvatar (req, res) {
     try{
       const user = await User.findById(req.user.id);
       if (!req.file) {
         return res.status(400).json({message: 'upload failed'})
       }
-      user.avatar = req.file.path
+      const result = await uploadToCloudinary(req.file);
+      user.avatar = result.url
       await user.save();
       return res.status(201).json({message: 'Successfully', data: user})
     } catch (e) {
