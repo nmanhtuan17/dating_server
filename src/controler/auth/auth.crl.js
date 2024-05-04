@@ -3,6 +3,8 @@ import Account from "@/model/account.model";
 import User from "@/model/user.model";
 import {hash} from "bcrypt";
 import {generateAccessToken, generateRefreshToken} from "../../utilities/generateToken";
+import {randomNumber} from "../../utilities";
+import {verifyEmail} from "../../utilities/verifyEmail";
 
 export class AuthCrl {
   static async sigIn(req, res) {
@@ -11,6 +13,9 @@ export class AuthCrl {
       const account = await Account.findOne({email})
       if (!account) {
         return res.status(400).json({message: "User not existing"});
+      }
+      if (!account.isVerified) {
+        return res.status(400).json({message: "Your account has not been verified"});
       }
       if (await comparePassword(password, account.password)) {
         const profile = await User.findById({_id: account.profile})
@@ -36,10 +41,12 @@ export class AuthCrl {
       const {email, password, fullName, age, gender} = req.body
       const hashPassword = await cryptPassword(password);
       const existingUser = await Account.findOne({email: email});
-      console.log(hashPassword)
+
       if (existingUser) {
         return res.status(400).json({message: "User existing"});
       }
+      const verifyCode = randomNumber(6);
+      verifyEmail(email, 'Code', verifyCode, req, res, "Successfully");
       const newProfile = new User({
         email,
         fullName,
@@ -50,15 +57,36 @@ export class AuthCrl {
         email,
         password: hashPassword,
         profile: newProfile._id,
-        isAdmin: false
+        isAdmin: false,
+        isVerified: false,
+        verifyCode
       });
       await newProfile.save();
       await newAccount.save();
-      return res.status(201).json({data: newProfile, message: "Successfully"});
+      return res.status(201).json({data: newProfile, message: "The verification code has been sent to your email"});
     } catch (error) {
       console.log(error)
       return res.status(500).json({error: error});
     }
 
+  }
+
+  static async verify(req, res) {
+    try {
+      const {email, code} = req.body;
+      const account = await Account.findOne({email: email});
+      if (!account) {
+        return res.status(400).json({message: "User existing"});
+      }
+      if (code !== account.verifyCode) {
+        return res.status(400).json({message: "Verify failed"});
+      }
+      account.isVerified = true;
+      await account.save();
+      return res.status(201).json({message: "Successfully"});
+    } catch (e) {
+      console.log(e)
+      return res.status(500).json({e});
+    }
   }
 }

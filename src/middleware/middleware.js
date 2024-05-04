@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 class MiddlewareController {
-  verifyToken(req, res, next) {
+  static verifyToken(req, res, next) {
     const token = req.headers.authorization;
     if (!token) {
       return res.status(403).json({message: "Invalid token"});
