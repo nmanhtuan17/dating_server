@@ -6,7 +6,12 @@ const UserSchema = new Schema({
   email: String,
   address: String,
   gender: String,
-  avatar: String
+  avatar: String,
+  marital: String,
+  target: String,
+  career: String,
+  zodiac: String,
+  personality: String
 })
 
 const User = mongoose.model('User', UserSchema)
