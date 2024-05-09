@@ -1,5 +1,6 @@
-import User from "../../model/user.model";
-import uploadToCloudinary from '../../utilities/uploadImage'
+import User from "@/model/user.model";
+import uploadToCloudinary from "@/utilities/uploadImage";
+
 export class UserCrl {
   static async updateProfile (req, res) {
     try {

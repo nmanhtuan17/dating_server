@@ -1,8 +1,9 @@
 import express from "express";
 import 'dotenv/config'
 import cors from "cors";
-import { initRoutes } from "@/routes";
-import { connect } from "@/config/db/db.conf";
+import {connect} from "@/config/db/db.conf";
+import {initRoutes} from "@/routes";
+
 connect();
 const app = express();
 const PORT = process.env.PORT;

@@ -1,6 +1,6 @@
 import AuthRoutes from "@/routes/auth.routes";
-import UserRoutes from "./user.routes";
-import PostRoutes from "./post.routes"
+import UserRoutes from "@/routes/user.routes";
+import PostRoutes from "@/routes/post.routes";
 
 export const initRoutes = (app) => {
   app.use('/api/auth', AuthRoutes);

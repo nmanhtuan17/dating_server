@@ -1,13 +1,14 @@
-import User from "../../model/user.model";
-import Post from "../../model/posts.model";
-import uploadToCloudinary from '../../utilities/uploadImage';
+import User from "@/model/user.model";
+import Post from "@/model/posts.model";
+import uploadToCloudinary from "@/utilities/uploadImage";
+
 class PostCtrl {
-  async upload (req, res) {
+  async upload(req, res) {
     const {
       description,
       title
     } = req.body
-    try{
+    try {
       const user = await User.findById(req.user.id);
       if (!req.files) {
         return res.status(400).json({message: 'upload failed'})

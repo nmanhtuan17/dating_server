@@ -1,7 +1,7 @@
 import { Router } from "express";
-import {UserCrl} from "../controler/user/user.crl";
+import {UserCrl} from "@/controler/user/user.crl";
 import middleware from "../middleware/middleware";
-import {upload} from "../config/cloudinary/cloudinary.conf";
+import {upload} from "@/config/cloudinary/cloudinary.conf";
 
 const router = Router();
 router.post('/update',middleware.verifyToken, UserCrl.updateProfile);

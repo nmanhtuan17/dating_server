@@ -1,10 +1,9 @@
 import {cryptPassword, comparePassword} from "@/utilities/encryption";
 import Account from "@/model/account.model";
 import User from "@/model/user.model";
-import {hash} from "bcrypt";
-import {generateAccessToken, generateRefreshToken} from "../../utilities/generateToken";
-import {randomNumber} from "../../utilities";
-import {verifyEmail} from "../../utilities/verifyEmail";
+import {generateAccessToken, generateRefreshToken} from "@/utilities/generateToken";
+import {randomNumber} from "@/utilities";
+import {verifyEmail} from "@/utilities/verifyEmail";
 
 export class AuthCrl {
   static async sigIn(req, res) {
@@ -46,7 +45,7 @@ export class AuthCrl {
         return res.status(400).json({message: "User existing"});
       }
       const verifyCode = randomNumber(6);
-      verifyEmail(email, 'Code', verifyCode, req, res, "Successfully");
+      await verifyEmail(email, 'Code', verifyCode, req, res, "Successfully");
       const newProfile = new User({
         email,
         fullName,
