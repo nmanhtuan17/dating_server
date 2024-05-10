@@ -66,7 +66,7 @@ export class AuthCrl {
       });
       await newProfile.save();
       await newAccount.save();
-      return res.status(201).json({data: newProfile, message: "The verification code has been sent to your email"});
+      return res.status(201).json({data: {...newProfile._doc, accountId: newAccount._id}, message: "The verification code has been sent to your email"});
     } catch (error) {
       console.log(error)
       return res.status(500).json({error: error});
@@ -76,12 +76,13 @@ export class AuthCrl {
 
   static async verify(req, res) {
     try {
-      const {email, code} = req.body;
-      const account = await Account.findOne({email: email});
+      const {id} = req.params
+      const {code} = req.body;
+      const account = await Account.findById(id);
       if (!account) {
         return res.status(400).json({message: "User existing"});
       }
-      if (code !== account.verifyCode) {
+      if (code !== account.verifyCode.toString()) {
         return res.status(400).json({message: "Verify failed"});
       }
       account.isVerified = true;
