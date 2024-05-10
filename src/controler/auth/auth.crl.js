@@ -29,6 +29,10 @@ export class AuthCrl {
             refreshToken
           }
         });
+      } else {
+        return res.status(400).json({
+          message: "Email or password wrong!!"
+        });
       }
     } catch (error) {
       return res.status(500).json({error: error});
@@ -45,7 +49,7 @@ export class AuthCrl {
         return res.status(400).json({message: "User existing"});
       }
       const verifyCode = randomNumber(6);
-      await verifyEmail(email, 'Code', verifyCode, req, res, "Successfully");
+      verifyEmail(email, 'Code', verifyCode, req, res, "Successfully");
       const newProfile = new User({
         email,
         fullName,
