@@ -41,7 +41,7 @@ export class AuthCrl {
 
   static async register(req, res) {
     try {
-      const {email, password, fullName, age, gender} = req.body
+      const {email, password, fullName, age, gender, address} = req.body
       const hashPassword = await cryptPassword(password);
       const existingUser = await Account.findOne({email: email});
 
@@ -54,7 +54,8 @@ export class AuthCrl {
         email,
         fullName,
         age,
-        gender
+        gender,
+        address
       });
       const newAccount = new Account({
         email,

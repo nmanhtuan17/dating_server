@@ -12,6 +12,7 @@ const UserSchema = new Schema({
   career: String,
   zodiac: String,
   personality: String,
+  seeking: String,
   likes: [
     {
       type: Schema.Types.ObjectId,
