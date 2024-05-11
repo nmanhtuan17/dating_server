@@ -11,7 +11,13 @@ const UserSchema = new Schema({
   target: String,
   career: String,
   zodiac: String,
-  personality: String
+  personality: String,
+  likes: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    }
+  ]
 })
 
 const User = mongoose.model('User', UserSchema)
