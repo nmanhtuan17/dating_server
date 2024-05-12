@@ -40,7 +40,7 @@ export class UserCrl {
 
   static async getUsers(req, res) {
     try {
-      const users = await User.find().populate('likes');
+      const users = await User.find({_id: {$ne: req.user.id}}).populate('likes');
       return res.status(201).json({ message: 'Successfully', data: users })
     } catch (e) {
       console.log(e)
