@@ -9,11 +9,14 @@ export class UserCrl {
         ...req.body
       }, {
         new: true
-      })
+      }).populate('likes')
       if (likes && likes.length > 0) {
         likes.forEach(item => {
-          user.likes.push(item)
+          if (!user.likes.some(e => e.equals(item))) {
+            user.likes.push(item)
+          }
         })
+        await user.save();
       }
       return res.status(201).json({ message: "Successfully", data: user });
     } catch (e) {

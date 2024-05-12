@@ -17,7 +17,7 @@ export class AuthCrl {
         return res.status(400).json({message: "Your account has not been verified"});
       }
       if (await comparePassword(password, account.password)) {
-        const profile = await User.findById({_id: account.profile})
+        const profile = await User.findById({_id: account.profile}).populate('likes')
         const accessToken = generateAccessToken(profile)
 
         const refreshToken = generateRefreshToken(profile)
