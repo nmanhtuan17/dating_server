@@ -17,7 +17,7 @@ export const verifyEmail = async (email, subject, payload, req, res, message) =>
       service: 'gmail',
       auth: {
         type: 'OAuth2',
-        user: 'tuanmnguye@gmail.com',
+        user: 'trannam3456pltn@gmail.com',
         clientId: process.env.GOOGLE_MAILER_CLIENT_ID,
         clientSecret: process.env.GOOGLE_MAILER_CLIENT_SECRET,
         refresh_token: process.env.GOOGLE_MAILER_REFRESH_TOKEN,
@@ -26,7 +26,7 @@ export const verifyEmail = async (email, subject, payload, req, res, message) =>
     })
     const options = () => {
       return {
-        from: 'tuanmnguye@gmail.com',
+        from: 'trannam3456pltn@gmail.com',
         to: email,
         subject: subject,
         text: payload
