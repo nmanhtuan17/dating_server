@@ -1,4 +1,4 @@
-import {getReceiverSocketId} from "@/socket/socket";
+import {getReceiverSocketId, io} from "@/socket/socket";
 import Conversation from "@/model/conversation.model";
 import Message from "@/model/message.model";
 
@@ -29,9 +29,6 @@ class MessageCtrl {
         conversation.messages.push(newMessage._id);
       }
 
-      // await conversation.save();
-      // await newMessage.save();
-
       // this will run in parallel
       await Promise.all([conversation.save(), newMessage.save()]);
 
@@ -56,7 +53,7 @@ class MessageCtrl {
 
       const conversation = await Conversation.findOne({
         participants: {$all: [senderId, userToChatId]},
-      }).populate("messages"); // NOT REFERENCE BUT ACTUAL MESSAGES
+      }).populate("messages");
 
       if (!conversation) return res.status(200).json([]);
 
