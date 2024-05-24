@@ -26,15 +26,22 @@ io.on("connection", (socket) => {
     socket.emit('connected')
   })
 
-  socket.on("join chat", (room) => {
+  socket.on("join room", (room) => {
     socket.join(room);
     console.log("User Joined Room: " + room);
   });
 
-
+  socket.on("send", (message) => {
+    console.log(message)
+    socket.to(message.room).emit('receive', {
+      room: message.room,
+      msg: message.msg
+    })
+  })
 
   socket.off("setup", () => {
-    socket.leave(user._id)
+    console.log("USER DISCONNECTED");
+    socket.leave(user._id);
   });
 });
 

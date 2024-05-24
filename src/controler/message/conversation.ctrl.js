@@ -5,7 +5,12 @@ class ConversationRoutes {
   async getAllConversation(req, res) {
     try {
       const userId = req.user.id;
-      const conversation = await ConversationModel.find({"participants.sender": userId})
+      const conversation = await ConversationModel.find({
+        $or: [
+          {"participants.sender": userId},
+          {"participants.receiver": userId}
+        ]
+      })
         .populate('participants.sender participants.receiver messages');
       res.status(200).json(conversation);
     } catch (e) {
