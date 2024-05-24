@@ -5,7 +5,8 @@ class ConversationRoutes {
   async getAllConversation(req, res) {
     try {
       const userId = req.user.id;
-      const conversation = await ConversationModel.find({participants: {$all: [userId]}}).populate('participants');
+      const conversation = await ConversationModel.find({"participants.sender": userId})
+        .populate('participants.sender participants.receiver messages');
       res.status(200).json(conversation);
     } catch (e) {
       console.log("Error in getMessages controller: ", e.message);
@@ -19,12 +20,15 @@ class ConversationRoutes {
       const senderId = req.user.id;
 
       let conversation = await Conversation.findOne({
-        participants: {$all: [senderId, receiverId]},
-      });
+        "participants.sender": senderId,
+        "participants.receiver": receiverId
+      }).populate('participants.sender participants.receiver messages');
 
       if (!conversation) {
         conversation = await Conversation.create({
-          participants: [senderId, receiverId],
+          participants: {
+            sender: senderId, receiver: receiverId
+          },
         });
       }
 

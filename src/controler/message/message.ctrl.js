@@ -10,12 +10,15 @@ class MessageCtrl {
       const senderId = req.user.id;
 
       let conversation = await Conversation.findOne({
-        participants: {$all: [senderId, receiverId]},
-      });
+        "participants.sender": senderId,
+        "participants.receiver": receiverId
+      }).populate('participants.sender participants.receiver messages');
 
       if (!conversation) {
         conversation = await Conversation.create({
-          participants: [senderId, receiverId],
+          participants: {
+            sender: senderId, receiver: receiverId
+          },
         });
       }
 
