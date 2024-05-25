@@ -2,16 +2,12 @@ import mongoose from "mongoose";
 
 const conversationSchema = new mongoose.Schema(
   {
-    participants: {
-      sender: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-      receiver: {
+    participants: [
+      {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
       }
-    },
+    ],
     messages: [
       {
         type: mongoose.Schema.Types.ObjectId,
