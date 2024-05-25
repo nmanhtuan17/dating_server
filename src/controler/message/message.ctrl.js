@@ -9,10 +9,19 @@ class MessageCtrl {
       const {id: receiverId} = req.params;
       const senderId = req.user.id;
 
-      let conversation = await Conversation.findOne({
-        "participants.sender": senderId,
-        "participants.receiver": receiverId
-      }).populate('participants.sender participants.receiver messages');
+      let conversation = await Conversation.findOne(
+        {
+          $or: [
+            {
+              "participants.sender": senderId,
+              "participants.receiver": receiverId
+            },
+            {
+              "participants.sender": receiverId,
+              "participants.receiver": senderId
+            }
+          ]
+        }).populate('participants.sender participants.receiver messages');
 
       if (!conversation) {
         conversation = await Conversation.create({
@@ -33,7 +42,7 @@ class MessageCtrl {
       }
 
       // this will run in parallel
-      await Promise.all([conversation.save(), newMessage.save()]);
+      // await Promise.all([conversation.save(), newMessage.save()]);
 
       res.status(201).json(newMessage);
     } catch (error) {
@@ -44,12 +53,13 @@ class MessageCtrl {
 
   async getMessages(req, res) {
     try {
-      const {id: userToChatId} = req.params;
+      const {id: receiverId} = req.params;
       const senderId = req.user.id;
 
       const conversation = await Conversation.findOne({
-        participants: {$all: [senderId, userToChatId]},
-      }).populate("messages");
+        "participants.sender": senderId,
+        "participants.receiver": receiverId
+      }).populate('participants.sender participants.receiver messages');
 
       if (!conversation) return res.status(200).json([]);
 

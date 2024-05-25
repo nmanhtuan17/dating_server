@@ -17,13 +17,14 @@ export const getReceiverSocketId = (receiverId) => {
   return userSocketMap[receiverId];
 };
 
-const userSocketMap = {}; // {userId: socketId}
+const userSocketMap = new Map(); // {userId: socketId}
 
 io.on("connection", (socket) => {
-  socket.on('setup', (user) => {
-    console.log('user._id', user._id)
-    socket.join(user._id)
+  socket.on('setup', (userId) => {
+    console.log('user._id', userId)
+    socket.join(userId)
     socket.emit('connected')
+    userSocketMap.set(userId, socket.id);
   })
 
   socket.on("join room", (room) => {
@@ -33,15 +34,14 @@ io.on("connection", (socket) => {
 
   socket.on("send", (message) => {
     console.log(message)
-    socket.to(message.room).emit('receive', {
-      room: message.room,
-      msg: message.msg
-    })
+    const {room, ...rest} = message;
+    socket.in(message.room).emit('receive', rest)
   })
 
   socket.off("setup", () => {
     console.log("USER DISCONNECTED");
-    socket.leave(user._id);
+    const room = userSocketMap.get(userId);
+    socket.leave(room);
   });
 });
 
