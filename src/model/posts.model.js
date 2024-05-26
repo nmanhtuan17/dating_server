@@ -1,17 +1,25 @@
 import mongoose, {Schema} from "mongoose";
 
 const PostSchema = new Schema({
-  onwer: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    owner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    images: [
+      {
+        type: String
+      }
+    ],
+    title: String,
+    content: String,
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Comment',
+        default: []
+      }
+    ]
   },
-  image: [
-    {
-      url: String
-    }
-  ],
-  title: String,
-  description: String
-})
+  {timestamps: true})
 const Post = mongoose.model('Post', PostSchema)
 export default Post
