@@ -23,7 +23,7 @@ io.on("connection", (socket) => {
     console.log('user._id', userId)
     socket.join(userId)
     socket.emit('connected')
-    userSocketMap.set(userId, socket.id);
+    // userSocketMap.set(userId, socket.id);
   })
 
   socket.on("join room", (room) => {
@@ -33,14 +33,14 @@ io.on("connection", (socket) => {
 
   socket.on("send", (message) => {
     console.log(message)
-    const {room, ...rest} = message;
-    socket.in(message.room).emit('receive', rest)
+    console.log(message.receiverId);
+    socket.in(message.receiverId).emit('receive', message)
   })
 
   socket.off("setup", () => {
     console.log("USER DISCONNECTED");
-    const room = userSocketMap.get(userId);
-    socket.leave(room);
+    // const room = userSocketMap.get(userId);
+    socket.leave(userId);
   });
 });
 
