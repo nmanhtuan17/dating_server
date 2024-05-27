@@ -18,6 +18,13 @@ const PostSchema = new Schema({
         ref: 'Comment',
         default: []
       }
+    ],
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default: []
+      }
     ]
   },
   {timestamps: true})

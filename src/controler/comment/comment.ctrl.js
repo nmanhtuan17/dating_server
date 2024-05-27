@@ -1,6 +1,4 @@
-import User from "@/model/user.model";
 import Post from "@/model/posts.model";
-import uploadToCloudinary from "@/utilities/uploadImage";
 import Comment from "@/model/comment.model";
 
 class CommentCtrl {
@@ -14,6 +12,7 @@ class CommentCtrl {
       const newComment = new Comment({
         owner: req.user._id,
         text: text,
+        hasReply: false
       })
       post.comments.push(newComment._id);
       await Promise.all([post.save(), newComment.save()])
@@ -23,6 +22,7 @@ class CommentCtrl {
       return res.status(500).json(e);
     }
   }
+
 }
 
 export default new CommentCtrl()
