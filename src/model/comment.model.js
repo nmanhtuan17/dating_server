@@ -13,6 +13,10 @@ const CommentSchema = new Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
     },
+    replyTo: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
     hasReply: Boolean
   },
   {timestamps: true})
