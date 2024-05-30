@@ -25,8 +25,9 @@ class PostCtrl {
   async getAll(req, res) {
     try {
       const posts = await Post.find({}).populate(
-        'owner likes'
+        'owner'
       );
+      console.log(posts)
       return res.status(200).json(posts)
     } catch (e) {
       console.log(e)
