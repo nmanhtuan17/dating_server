@@ -32,8 +32,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send", (message) => {
-    console.log(message)
-    console.log(message.receiverId);
     socket.in(message.receiverId).emit('receive', message)
   })
 

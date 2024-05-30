@@ -49,6 +49,7 @@ export class AuthCrl {
         return res.status(400).json({message: "User existing"});
       }
       const verifyCode = randomNumber(6);
+      console.log(verifyCode)
       verifyEmail(email, 'Code', verifyCode, req, res, "Successfully");
       const newProfile = new User({
         email,
@@ -57,6 +58,7 @@ export class AuthCrl {
         gender,
         address
       });
+
       const newAccount = new Account({
         email,
         password: hashPassword,
