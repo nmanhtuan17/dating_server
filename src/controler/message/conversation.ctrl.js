@@ -48,6 +48,17 @@ class ConversationRoutes {
       res.status(500).json({error: "Internal server error"});
     }
   }
+
+  async deleteConversation(req, res) {
+    try {
+      const {id} = req.params;
+      await Conversation.findByIdAndDelete(id);
+      res.status(201).json({message: 'Successfully'});
+    } catch (error) {
+      console.log("Error in sendMessage controller: ", error.message);
+      res.status(500).json({error: "Internal server error"});
+    }
+  }
 }
 
 export default new ConversationRoutes();

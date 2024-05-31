@@ -36,8 +36,7 @@ io.on("connection", (socket) => {
   })
 
   socket.on("getNotification", (data) => {
-    socket.in(data.receiverId).emit('notification', data)
-    console.log(data)
+    socket.in(data.receiverId).emit('notification', data);
   })
 
   socket.off("setup", () => {
