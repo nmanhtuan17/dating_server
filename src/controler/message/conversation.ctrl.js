@@ -10,6 +10,7 @@ class ConversationRoutes {
       const userId = req.user.id;
       const conversation = await Conversation.find({participants: {$all: [userId]}})
         .populate('participants messages');
+
       res.status(200).json(conversation);
     } catch (e) {
       console.log("Error in getMessages controller: ", e.message);
@@ -32,7 +33,8 @@ class ConversationRoutes {
 
       const notification = new Notification({
         conversation,
-        body: `${sender.fullName} muốn nhắn tin cho bạn`
+        text: `${sender.fullName} muốn nhắn tin cho bạn`,
+        receiver: receiverId
       })
       await Promise.all([conversation.save(), notification.save()]);
       io.in(receiverId).emit('notification', {

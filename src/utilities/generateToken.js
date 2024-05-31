@@ -6,7 +6,7 @@ export const generateAccessToken = (user) => {
       isAdmin: user.isAdmin
     },
     process.env.JWT_ACCESS_KEY,
-    {expiresIn: '2d'}
+    {expiresIn: '1h'}
   )
 }
 export const generateRefreshToken = (user) => {

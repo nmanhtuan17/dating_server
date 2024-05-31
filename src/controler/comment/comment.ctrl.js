@@ -1,5 +1,8 @@
 import Post from "@/model/posts.model";
 import Comment from "@/model/comment.model";
+import Notification from "@/model/notification.model";
+import {io} from "@/socket/socket";
+import User from "@/model/user.model";
 
 class CommentCtrl {
   async addComment(req, res) {
@@ -10,6 +13,7 @@ class CommentCtrl {
     const {postId} = req.params
     try {
       const post = await Post.findById(postId).populate('owner comments')
+      const user = await User.findById(req.user.id);
       const newComment = new Comment({
         owner: req.user.id,
         text: text,
@@ -17,7 +21,19 @@ class CommentCtrl {
         replyTo: replyTo
       })
       post.comments.push(newComment._id);
-      await Promise.all([post.save(), newComment.save()])
+
+      const notification = new Notification({
+        text: `${user.fullName} đã bình luận bài viết của bạn`,
+        receiver: post.owner._id,
+        type: 'other'
+      })
+
+      await Promise.all([post.save(), notification.save(), newComment.save()]);
+
+      io.emit('getNotification', {
+        text: notification.text
+      })
+
       return res.status(201).json(newComment)
     } catch (e) {
       console.log(e)

@@ -1,11 +1,15 @@
 import mongoose, {Schema} from "mongoose";
 
 const NotificationSchema = new Schema({
-    body: String,
+    text: String,
     type: String,
     conversation: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Conversation'
+    },
+    receiver: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
     }
   },
   {timestamps: true})

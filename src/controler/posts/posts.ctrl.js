@@ -1,6 +1,8 @@
 import User from "@/model/user.model";
 import Post from "@/model/posts.model";
 import uploadToCloudinary from "@/utilities/uploadImage";
+import {io} from "@/socket/socket";
+import Notification from "@/model/notification.model";
 
 class PostCtrl {
   async upload(req, res) {
@@ -24,10 +26,9 @@ class PostCtrl {
 
   async getAll(req, res) {
     try {
-      const posts = await Post.find({}).populate(
+      const posts = await Post.find({}).sort({ createdAt: -1 }).populate(
         'owner'
       );
-      console.log(posts)
       return res.status(200).json(posts)
     } catch (e) {
       console.log(e)
@@ -58,14 +59,27 @@ class PostCtrl {
       const {
         postId
       } = req.params
-      const post = await Post.findById(postId).populate('owner')
-
+      const post = await Post.findById(postId).populate('owner');
+      const user = await User.findById(req.user.id);
       if (!post.likes.some(e => e.equals(req.user.id))) {
         post.likes.push(req.user.id)
       } else {
         post.likes.pull(req.user.id);
       }
-      await post.save();
+
+
+      const notification = new Notification({
+        text: `${user.fullName} đã thích bài viết của bạn`,
+        receiver: post.owner._id,
+        type: 'other'
+      })
+
+      await Promise.all([post.save(), notification.save()]);
+
+      io.emit('getNotification', {
+        text: notification.text,
+        type: 'other'
+      })
       return res.status(201).json(post);
     } catch (e) {
       console.log(e)

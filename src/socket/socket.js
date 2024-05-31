@@ -35,6 +35,11 @@ io.on("connection", (socket) => {
     socket.in(message.receiverId).emit('receive', message)
   })
 
+  socket.on("getNotification", (data) => {
+    socket.in(data.receiverId).emit('notification', data)
+    console.log(data)
+  })
+
   socket.off("setup", () => {
     console.log("USER DISCONNECTED");
     // const room = userSocketMap.get(userId);
